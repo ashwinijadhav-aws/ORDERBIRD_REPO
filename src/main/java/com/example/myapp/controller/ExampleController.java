@@ -15,4 +15,15 @@ public class ExampleController {
     public ResponseEntity<String> success() {
         return ResponseEntity.ok(exampleService.connectToDatabase());
     }
+
+    
+    @GetMapping("/stress")
+    public int stress() {
+        int counter = 0;
+        for(int i=0; i<=50000; i++)
+        {
+            counter +=i;
+        } 
+        return counter;
+    }
 }
