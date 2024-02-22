@@ -19,5 +19,21 @@ pipeline {
         sh 'mvn clean package'
       }
     }
+    stage('Build and Push Docker Image') {
+      environment {
+        DOCKER_IMAGE = "ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}"
+        // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
+        REGISTRY_CREDENTIALS = credentials('docker-cred')
+      }
+      steps {
+        script {
+            sh 'docker build -t ${DOCKER_IMAGE} .'
+            def dockerImage = docker.image("${DOCKER_IMAGE}")
+            docker.withRegistry('https://hub.docker.com/', "docker-cred") {
+                dockerImage.push()
+            }
+        }
+      }
+    }
   }
 }
