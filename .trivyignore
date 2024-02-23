@@ -1,0 +1,17 @@
+# Example .trivyignore file
+
+# Ignore all vulnerabilities with the following IDs
+# CVE-2022-3715
+# CVE-2021-25329
+
+# Ignore vulnerabilities in specific packages
+org.springframework:spring-web
+org.apache.tomcat.embed:tomcat-embed-core
+
+# Ignore vulnerabilities with certain severities
+severity:LOW
+severity:UNKNOWN
+
+# Ignore vulnerabilities in certain packages with specific versions
+org.yaml:snakeyaml:1.25
+org.hibernate:hibernate-core:5.4.10.Final
