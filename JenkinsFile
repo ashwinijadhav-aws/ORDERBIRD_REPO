@@ -1,9 +1,6 @@
 pipeline {
   agent any 
-  tools {
-        // Specify the Maven installation configured in Jenkins
-        maven 'Maven_Local'
-    }
+  tools { maven 'Maven_Local' }
   stages {
     stage('Checkout') {
       steps {
@@ -12,7 +9,7 @@ pipeline {
         //git branch: 'main', url: 'https://github.com/iam-veeramalla/Jenkins-Zero-To-Hero.git'
       }
     } 
-     stage('Build and Test') {
+    stage('Build and Test') {
       steps {
         sh 'ls -ltr'
         // build the project and create a JAR file
@@ -29,21 +26,40 @@ pipeline {
         }
       }
     }*/
-    stage('Build and Push Docker Image') {
-      environment {
-        DOCKER_IMAGE = "ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}"
-        // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
-        REGISTRY_CREDENTIALS = credentials('docker-cred')
-      }
-      steps {
-        script {
-            sh 'docker build -t ${DOCKER_IMAGE} .'
-            def dockerImage = docker.image("${DOCKER_IMAGE}")
-            docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
-                dockerImage.push()
-            }
+    stage('Build Docker Image') {
+        environment {
+          DOCKER_IMAGE = "ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}"
         }
-      }
+        steps {
+          script {
+              sh 'docker build -t ${DOCKER_IMAGE} .'
+              }
+          }
     }
+    stage('Scan image with Trivy') {
+            steps {
+                sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/html.tpl" -o report.html ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
+
+            }
+    }
+    stage('Push Docker Image') {
+            environment {
+              REGISTRY_CREDENTIALS = credentials('docker-cred')
+            }
+            steps {
+              script {
+                      def dockerImage = docker.image("${DOCKER_IMAGE}")
+                      docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
+                      dockerImage.push()
+                  }
+              }
+           }
+   }
   }
+
+   post {
+        always {
+                archiveArtifacts artifacts: "report.html", fingerprint: true
+            }
+        } 
 }
