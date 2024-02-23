@@ -38,7 +38,7 @@ pipeline {
     }
     stage('Scan image with Trivy') {
             steps {
-                sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@contrib/html.tpl" -o report.html ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
+                sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL --format json --output results.json ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
 
             }
     }
@@ -59,7 +59,7 @@ pipeline {
 
    post {
         always {
-                archiveArtifacts artifacts: "report.html", fingerprint: true
+                archiveArtifacts artifacts: "results.json", fingerprint: true
             }
         } 
 }
