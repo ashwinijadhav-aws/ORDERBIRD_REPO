@@ -39,13 +39,14 @@ pipeline {
     stage('Scan image with Trivy') {
             steps {
               //  sh 'trivy image --exit-code 1 --ignore-unfixed --severity HIGH,CRITICAL --format json --output results.json ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
-              sh 'trivy image --exit-code 0  --format json --output results.json --ignorefile .trivyignore ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
+              sh 'trivy image --exit-code 1  --format json --output results.json --ignorefile .trivyignore ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
 
             }
     }
     stage('Push Docker Image') {
             environment {
               REGISTRY_CREDENTIALS = credentials('docker-cred')
+              DOCKER_IMAGE = "ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}"
             }
             steps {
               script {
