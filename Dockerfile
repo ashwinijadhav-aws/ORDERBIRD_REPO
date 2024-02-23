@@ -1,5 +1,8 @@
 # Dockerfile
-FROM adoptopenjdk:11-jre-hotspot-alpine
+FROM alpine:latest
+
+# Install OpenJDK 11
+RUN apk --no-cache add openjdk11-jre
 
 # Update packages and install the latest version of bash (if it's installed)
 RUN apt-get update && \
