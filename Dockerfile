@@ -1,5 +1,5 @@
 # Dockerfile
-FROM openjdk:11-jre-slim
+FROM adoptopenjdk:11-jre-hotspot-alpine
 
 # Update packages and install the latest version of bash (if it's installed)
 RUN apt-get update && \
