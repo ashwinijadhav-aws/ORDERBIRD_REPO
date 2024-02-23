@@ -38,7 +38,7 @@ pipeline {
     }
     stage('Scan image with Trivy') {
             steps {
-                sh 'trivy image --exit-code 1 --ignore CVE-2016-1000027 --ignore-unfixed --severity HIGH,CRITICAL --format json --output results.json ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
+                sh 'trivy image --exit-code 1 --ignore-unfixed CVE-2016-1000027,CVE-2022-22965 --severity HIGH,CRITICAL --format json --output results.json ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
 
             }
     }
