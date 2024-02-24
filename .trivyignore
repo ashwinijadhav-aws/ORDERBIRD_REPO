@@ -15,6 +15,13 @@ org.springframework.boot:spring-boot
 org.springframework.boot:spring-boot-starter-web
 org.springframework:spring-core
 org.springframework:spring-webmvc
+com.fasterxml.jackson.core:jackson-databind
+org.apache.tomcat.embed:tomcat-embed-websocket
+org.dom4j:dom4j
+org.hibernate:hibernate-core
+org.postgresql:postgresql
+org.thymeleaf:thymeleaf-spring5
+org.yaml:snakeyaml
 
 
 # Ignore vulnerabilities with certain severities
