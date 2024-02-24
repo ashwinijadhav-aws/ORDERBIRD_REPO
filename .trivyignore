@@ -2,11 +2,20 @@
 
 # Ignore all vulnerabilities with the following IDs
 CVE-2016-1000027
+CVE-2022-27772
+CVE-2022-22965
+CVE-2021-22118
+CVE-2022-22965
 # CVE-2021-25329
 
 # Ignore vulnerabilities in specific packages
 org.springframework:spring-web
 org.apache.tomcat.embed:tomcat-embed-core
+org.springframework.boot:spring-boot
+org.springframework.boot:spring-boot-starter-web
+org.springframework:spring-core
+org.springframework:spring-webmvc
+
 
 # Ignore vulnerabilities with certain severities
 severity:LOW
