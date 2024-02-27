@@ -61,6 +61,8 @@ pipeline {
   stage('Clone repository') {
             steps {
                 git branch: 'main', url: "https://github.com/ashwinijadhav-aws/ORDERBIRD_K8S_MANIFEST_REPO"
+                sh 'ls -ltr'
+                sh 'pwd'
             }
     }
 
