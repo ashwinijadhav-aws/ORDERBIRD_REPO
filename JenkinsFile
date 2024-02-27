@@ -7,6 +7,7 @@ pipeline {
         string(defaultValue: 'main', description: 'k8s manifest branch name', name: 'branchName')
         string(defaultValue: "http://18.192.66.2:9000", description: 'sonar url ', name: 'sonar_url')
          string(defaultValue: "ashwinijadhavaws/orderbird-app-prod-image", description: 'docker image name', name: 'docker_image_name')
+        string(defaultValue: "ashwinijadhavaws", description: 'dockerhub user name', name: 'dockerhub_user_name')
   }
   stages {
     stage('Checkout') {
@@ -75,6 +76,7 @@ pipeline {
    stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "${params.k8s_manifest_repo_name}"
+            GIT_USER_NAME = "ashwinijadhav-aws"
         }
         steps {
             withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
