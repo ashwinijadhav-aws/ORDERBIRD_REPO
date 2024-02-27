@@ -16,7 +16,7 @@ pipeline {
         //git branch: 'main', url: 'https://github.com/ashwinijadhav-aws/ORDERBIRD_K8S_ARGOCD'
       }
     } 
-    stage('Build and Test') {
+    stage('Build') {
       steps {
         sh 'ls -ltr'
         // build the project and create a JAR file
@@ -65,7 +65,7 @@ pipeline {
            }
    }
 
-  stage('Clone repository') {
+  stage('Clone k8s repository') {
             steps {
                 git branch: 'main', url: "${params.k8s_manifest_repo_url}"
 
@@ -82,6 +82,7 @@ pipeline {
                     git config user.email "ashwinijadhav243@gmail.com"
                     git config user.name "ashwinijadhav-aws"
                     BUILD_NUMBER=${BUILD_NUMBER}
+                    echo "Image name before sed: ${params.docker_image_name}" 
                     sed -i "s|image: ${params.docker_image_name}.*|image: ${params.docker_image_name}:${BUILD_NUMBER}|g" SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git add .
                     cat SPRING-BOOT-APP-MANIFEST/app_deployment.yml
