@@ -1,6 +1,13 @@
 pipeline {
   agent any 
   tools { maven 'Maven_Local' }
+  parameters {
+        string(defaultValue: "https://github.com/ashwinijadhav-aws/ORDERBIRD_K8S_MANIFEST_REPO", description: 'k8s manifest repo url', name: 'k8s_manifest_repo_url')
+        string(defaultValue: "ORDERBIRD_K8S_MANIFEST_REPO", description: 'k8s manifest repo name', name: 'k8s_manifest_repo_name')
+        string(defaultValue: 'main', description: 'k8s manifest branch name', name: 'branchName')
+        string(defaultValue: "http://18.192.66.2:9000", description: 'sonar url ', name: 'sonar_url')
+         string(defaultValue: "ashwinijadhavaws/orderbird-app-prod-image", description: 'docker image name', name: 'docker_image_name')
+  }
   stages {
     stage('Checkout') {
       steps {
@@ -16,19 +23,19 @@ pipeline {
         sh 'mvn clean package'
       }
     }
-  /*  stage('Static Code Analysis') {
+   stage('Static Code Analysis') {
       environment {
-        SONAR_URL = "http://18.192.66.2:9000"
+        SONAR_URL = "${params.sonar_url}"
       }
       steps {
         withCredentials([string(credentialsId: 'sonar-cred', variable: 'SONAR_AUTH_TOKEN')]) {
           sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
         }
       }
-    }*/
+    }
     stage('Build Docker Image') {
         environment {
-          DOCKER_IMAGE = "ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}"
+          DOCKER_IMAGE = "${params.docker_image_name}":${BUILD_NUMBER}"
         }
         steps {
           script {
@@ -46,7 +53,7 @@ pipeline {
     stage('Push Docker Image') {
             environment {
               REGISTRY_CREDENTIALS = credentials('docker-cred')
-              DOCKER_IMAGE = "ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}"
+              DOCKER_IMAGE = "${params.docker_image_name}":${BUILD_NUMBER}"
             }
             steps {
               script {
@@ -60,17 +67,14 @@ pipeline {
 
   stage('Clone repository') {
             steps {
-                git branch: 'main', url: "https://github.com/ashwinijadhav-aws/ORDERBIRD_K8S_MANIFEST_REPO"
-                sh 'ls -ltr'
-                sh 'pwd'
+                git branch: 'main', url: "${params.k8s_manifest_repo_url}"
+
             }
     }
 
    stage('Update Deployment File') {
         environment {
-            GIT_REPO_NAME = "ORDERBIRD_K8S_MANIFEST_REPO"
-            GIT_USER_NAME = "ashwinijadhav-aws"
-            GIT_PASSWORD = "Ash1w@na"
+            GIT_REPO_NAME = "${params.k8s_manifest_repo_name}"
         }
         steps {
             withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
@@ -78,7 +82,7 @@ pipeline {
                     git config user.email "ashwinijadhav243@gmail.com"
                     git config user.name "ashwinijadhav-aws"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i "s|image: ashwinijadhavaws/orderbird-app-prod-image.*|image: ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}|g" SPRING-BOOT-APP-MANIFEST/app_deployment.yml
+                    sed -i "s|image: ${params.docker_image_name}.*|image: ${params.docker_image_name}:${BUILD_NUMBER}|g" SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git add .
                     cat SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
@@ -97,23 +101,3 @@ pipeline {
             }
         } 
 }
-
-
-  /* stage('Update Deployment File') {
-        environment {
-            GIT_REPO_NAME = "Jenkins-Zero-To-Hero"
-            GIT_USER_NAME = "iam-veeramalla"
-        }
-        steps {
-            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-                sh '''
-                    git config user.email "ashwinijadhav243@gmail.com"
-                    git config user.name "ashwinijadhav-aws"
-                    BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                    git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                '''
-            }
-  }*/
