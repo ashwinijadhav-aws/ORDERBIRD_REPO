@@ -82,7 +82,7 @@ pipeline {
                     git add .
                     cat SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GIT_USER_NAME}:${GIT_PASSWORD}@github.com/${GIT_USER_NAME}/ORDERBIRD_K8S_MANIFEST_REPO HEAD:main
+                    "git push https://${GIT_USER_NAME}:${GIT_PASSWORD}@github.com/${GIT_USER_NAME}/ORDERBIRD_K8S_MANIFEST_REPO HEAD:main"
                 '''
 
             }
