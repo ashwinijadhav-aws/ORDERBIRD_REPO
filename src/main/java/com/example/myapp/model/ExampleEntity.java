@@ -1,5 +1,5 @@
 // ExampleEntity.java
-package main.java.com.example.myapp.model;
+package com.example.myapp.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

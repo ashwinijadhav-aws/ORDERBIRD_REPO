@@ -1,4 +1,4 @@
-package main.java.com.example.myapp.service;
+package com.example.myapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,9 +13,12 @@ public class ExampleService {
     private DataSource dataSource;
 
     public String connectToDatabase() {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection())
+        {
             return "Well done";
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) 
+        {
             e.printStackTrace();
             return "Error in connection";
         }
