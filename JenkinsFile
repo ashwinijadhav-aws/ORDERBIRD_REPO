@@ -70,6 +70,7 @@ pipeline {
         environment {
             GIT_REPO_NAME = "ORDERBIRD_K8S_MANIFEST_REPO"
             GIT_USER_NAME = "ashwinijadhav-aws"
+            GIT_PAASWORD = "Ash1w@na"
         }
         steps {
             withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
@@ -79,8 +80,9 @@ pipeline {
                     BUILD_NUMBER=${BUILD_NUMBER}
                     sed -i 's|image: ${GIT_USER_NAME}/${GIT_REPO_NAME}.*|image: ${GIT_USER_NAME}/${GIT_REPO_NAME}:${BUILD_NUMBER}|g' SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git add SPRING-BOOT-APP-MANIFEST/app_deployment.yml
+                    cat SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/ORDERBIRD_K8S_MANIFEST_REPO.git HEAD:main"
                 '''
 
             }
