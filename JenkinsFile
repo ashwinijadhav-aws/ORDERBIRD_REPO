@@ -58,6 +58,12 @@ pipeline {
            }
    }
 
+  stage('Clone repository') {
+            steps {
+                git branch: 'main', url: "https://github.com/ashwinijadhav-aws/ORDERBIRD_K8S_MANIFEST_REPO"
+            }
+    }
+
    stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "ORDERBIRD_K8S_MANIFEST_REPO"
@@ -69,7 +75,6 @@ pipeline {
                     git config user.email "ashwinijadhav243@gmail.com"
                     git config user.name "ashwinijadhav-aws"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     sed -i 's|image: ${GIT_USER_NAME}/${GIT_REPO_NAME}.*|image: ${GIT_USER_NAME}/${GIT_REPO_NAME}:${BUILD_NUMBER}|g' app_deployment.yml
                     git add SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
