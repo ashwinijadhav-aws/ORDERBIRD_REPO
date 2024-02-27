@@ -70,7 +70,7 @@ pipeline {
         environment {
             GIT_REPO_NAME = "ORDERBIRD_K8S_MANIFEST_REPO"
             GIT_USER_NAME = "ashwinijadhav-aws"
-            GIT_PAASWORD = "Ash1w@na"
+            GIT_PASSWORD = "Ash1w@na"
         }
         steps {
             withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
@@ -78,11 +78,11 @@ pipeline {
                     git config user.email "ashwinijadhav243@gmail.com"
                     git config user.name "ashwinijadhav-aws"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i 's|image: ashwinijadhavaws/orderbird-app-prod-image.*|image: ashwinijadhavaws/orderbird-app-prod-image:"${BUILD_NUMBER}"|g' SPRING-BOOT-APP-MANIFEST/app_deployment.yml
+                    sed -i "s|image: ashwinijadhavaws/orderbird-app-prod-image.*|image: ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}|g" SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git add .
                     cat SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/ORDERBIRD_K8S_MANIFEST_REPO HEAD:main
+                    git push https://${GIT_USER_NAME}:${GIT_PASSWORD}@github.com/${GIT_USER_NAME}/ORDERBIRD_K8S_MANIFEST_REPO HEAD:main
                 '''
 
             }
