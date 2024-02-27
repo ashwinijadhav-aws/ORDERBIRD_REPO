@@ -9,15 +9,15 @@ import java.sql.SQLException;
 
 @Service
 public class ExampleService {
-  //  @Autowired
-   // private DataSource dataSource;
+    @Autowired
+    private DataSource dataSource;
 
     public String connectToDatabase() {
-        //try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             return "Well done";
-        //} catch (SQLException e) {
-          //  e.printStackTrace();
-          //  return "Error in connection";
-      //  }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error in connection";
+        }
     }
 }
