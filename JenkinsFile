@@ -82,7 +82,6 @@ pipeline {
                     git config user.email "ashwinijadhav243@gmail.com"
                     git config user.name "ashwinijadhav-aws"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    echo "Image name before sed: ${params.docker_image_name}" 
                     sed -i "s|image: ashwinijadhavaws/orderbird-app-prod-image.*|image: ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}|g" SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git add .
                     cat SPRING-BOOT-APP-MANIFEST/app_deployment.yml
