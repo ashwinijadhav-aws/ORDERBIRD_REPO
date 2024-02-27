@@ -35,7 +35,7 @@ pipeline {
     }
     stage('Build Docker Image') {
         environment {
-          DOCKER_IMAGE = "${params.docker_image_name}":${BUILD_NUMBER}"
+          DOCKER_IMAGE = "${params.docker_image_name}:${BUILD_NUMBER}"
         }
         steps {
           script {
@@ -53,7 +53,7 @@ pipeline {
     stage('Push Docker Image') {
             environment {
               REGISTRY_CREDENTIALS = credentials('docker-cred')
-              DOCKER_IMAGE = "${params.docker_image_name}":${BUILD_NUMBER}"
+              DOCKER_IMAGE = "${params.docker_image_name}:${BUILD_NUMBER}"
             }
             steps {
               script {
