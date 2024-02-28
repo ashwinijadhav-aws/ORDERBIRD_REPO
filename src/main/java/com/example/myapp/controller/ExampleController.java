@@ -20,7 +20,7 @@ public class ExampleController {
     @GetMapping("/stress")
     public int stress() {
         int counter = 0;
-        for(int i=0; i<=50000; i++)
+        for(int i=0; i<=5000000; i++)
         {
             counter +=i;
         } 
