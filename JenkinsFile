@@ -26,7 +26,7 @@ pipeline {
     }
    stage('Static Code Analysis') {
       environment {
-        SONAR_URL = "${params.sonar_url}"
+        SONAR_URL = "http://18.199.107.248:9000"
       }
       steps {
         sh 'echo ${SONAR_URL}'
