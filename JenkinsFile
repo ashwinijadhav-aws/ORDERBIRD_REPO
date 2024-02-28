@@ -5,7 +5,7 @@ pipeline {
         string(defaultValue: "https://github.com/ashwinijadhav-aws/ORDERBIRD_K8S_MANIFEST_REPO", description: 'k8s manifest repo url', name: 'k8s_manifest_repo_url')
         string(defaultValue: "ORDERBIRD_K8S_MANIFEST_REPO", description: 'k8s manifest repo name', name: 'k8s_manifest_repo_name')
         string(defaultValue: 'main', description: 'k8s manifest branch name', name: 'branchName')
-        string(defaultValue: "http://18.192.66.2:9000", description: 'sonar url ', name: 'sonar_url')
+        string(defaultValue: "http://18.199.107.248:9000", description: 'sonar url ', name: 'sonar_url')
          string(defaultValue: "ashwinijadhavaws/orderbird-app-prod-image", description: 'docker image name', name: 'docker_image_name')
         string(defaultValue: "ashwinijadhavaws", description: 'dockerhub user name', name: 'dockerhub_user_name')
   }
@@ -24,7 +24,7 @@ pipeline {
         sh 'mvn clean package'
       }
     }
-   /*stage('Static Code Analysis') {
+   stage('Static Code Analysis') {
       environment {
         SONAR_URL = "${params.sonar_url}"
       }
@@ -33,7 +33,7 @@ pipeline {
           sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
         }
       }
-    }*/
+    }
     stage('Build Docker Image') {
         environment {
           DOCKER_IMAGE = "${params.docker_image_name}:${BUILD_NUMBER}"
@@ -73,7 +73,7 @@ pipeline {
             }
     }
 
-   stage('Update Deployment File') {
+   stage('Update k8s manifest Deployment File') {
         environment {
             GIT_REPO_NAME = "${params.k8s_manifest_repo_name}"
             GIT_USER_NAME = "ashwinijadhav-aws"
