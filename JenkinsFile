@@ -14,13 +14,11 @@ pipeline {
       steps {
         sh 'echo passed'
         sh 'printenv'
-        //git branch: 'main', url: 'https://github.com/ashwinijadhav-aws/ORDERBIRD_K8S_ARGOCD'
       }
     } 
     stage('Build') {
       steps {
         sh 'ls -ltr'
-        // build the project and create a JAR file
         sh 'mvn clean package'
       }
     }
@@ -47,7 +45,6 @@ pipeline {
     }
     stage('Scan image with Trivy') {
             steps {
-              //  sh 'trivy image --exit-code 1 --ignore-unfixed --severity HIGH,CRITICAL --format json --output results.json ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
               sh 'trivy image --exit-code 1  --severity HIGH,CRITICAL  --format json --output results.json --ignorefile .trivyignore ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}'
 
             }
@@ -86,7 +83,7 @@ pipeline {
                     git config user.name "ashwinijadhav-aws"
                     BUILD_NUMBER=${BUILD_NUMBER}
                     sed -i "s|image: ashwinijadhavaws/orderbird-app-prod-image.*|image: ashwinijadhavaws/orderbird-app-prod-image:${BUILD_NUMBER}|g" SPRING-BOOT-APP-MANIFEST/app_deployment.yml
-                    git add .
+                    git add SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     cat SPRING-BOOT-APP-MANIFEST/app_deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
                     git push "https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}" HEAD:main

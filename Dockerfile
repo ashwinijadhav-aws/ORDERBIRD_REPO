@@ -1,8 +1,8 @@
 # Dockerfile
-FROM alpine:latest
+FROM alpine:3.14
 
 # Install OpenJDK 11
-RUN apk --no-cache add openjdk11-jre
+RUN apk --no-cache add openjdk11-jre  && rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
